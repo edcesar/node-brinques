@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  mongo-express:
+    container_name: lab-mongo-express
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: edcesar
+      ME_CONFIG_BASICAUTH_PASSWORD: 123456
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+    networks:
+      - lab
+
+  mongo:
+    container_name: lab-mongo
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - lab
+  
+  node:
+    container_name: lab-node
+    build: ./docker-files
+    ports:
+        - "3000:3000"
+    volumes:
+        - ./src:/app
+    networks:
+        - lab    
+
+networks: 
+    lab:
+      driver: bridge
